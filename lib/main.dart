@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:icare_tagum_admin/login/login_screen.dart';
+import 'package:icare_tagum_admin/side_nav/side_nav.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,7 +20,10 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      home: Login_Screen(),
+      routes: {
+        '/': (context) => const LoginScreen(),
+        SideNav.routeName: (context) => const SideNav(),
+      },
     );
   }
 }
