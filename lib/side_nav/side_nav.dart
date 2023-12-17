@@ -45,7 +45,7 @@ class SideNav extends StatelessWidget {
                               selected: navController.index.value == 0,
                             ),
                             NavListTile(
-                              title: 'Create Update',
+                              title: 'Manage Updates',
                               onTap: () => navController.index.value = 1,
                               selected: navController.index.value == 1,
                               icon: Icons.create_rounded,
