@@ -25,9 +25,9 @@ class _AddUserState extends State<AddUser> {
     return Card(
       margin: const EdgeInsets.only(
         left: 750,
-        top: 150,
-        bottom: 150,
         right: 550,
+        top: 151,
+        bottom: 151,
       ),
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(
@@ -46,7 +46,7 @@ class _AddUserState extends State<AddUser> {
             ),
           ),
           Container(
-              padding: EdgeInsets.all(55),
+              padding: EdgeInsets.all(45),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(25),
@@ -62,17 +62,17 @@ class _AddUserState extends State<AddUser> {
                         fontWeight: FontWeight.bold,
                         color: Colors.green),
                   ),
-                  const SizedBox(height: 35),
+                  const SizedBox(height: 25),
                   AddUserTextfield(
                     label: const Text('Name'),
                     controller: nameController,
                   ),
-                  const SizedBox(height: 17),
+                  const SizedBox(height: 23),
                   AddUserTextfield(
                     label: const Text('Email'),
                     controller: emailController,
                   ),
-                  const SizedBox(height: 17),
+                  const SizedBox(height: 23),
                   Container(
                     padding: const EdgeInsets.only(left: 15, right: 15),
                     decoration: BoxDecoration(
@@ -101,24 +101,24 @@ class _AddUserState extends State<AddUser> {
                       },
                     ),
                   ),
-                  const SizedBox(height: 17),
+                  const SizedBox(height: 23),
                   AddUserTextfield(
                     label: const Text('Position'),
                     controller: positionController,
                   ),
-                  const SizedBox(height: 17),
+                  const SizedBox(height: 23),
                   AddUserTextfield(
                     label: const Text('Department'),
                     controller: departmentController,
                   ),
-                  const SizedBox(height: 17),
+                  const SizedBox(height: 23),
                   AddUserTextfield(
                     label: const Text('Password'),
                     controller: passwordController,
                   ),
                   const SizedBox(height: 45),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       AddUserButton(
                         buttonName: 'Close',
@@ -129,6 +129,7 @@ class _AddUserState extends State<AddUser> {
                         bColor: Colors.grey,
                         icon: Icons.close,
                       ),
+                      const SizedBox(width: 35),
                       AddUserButton(
                         buttonName: 'Add User',
                         onTap: () {},
