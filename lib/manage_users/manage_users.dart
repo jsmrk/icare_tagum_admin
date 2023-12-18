@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:icare_tagum_admin/manage_users/add_user.dart';
 
 class ManageUsers extends StatelessWidget {
   const ManageUsers({super.key});
@@ -41,7 +42,10 @@ class ManageUsers extends StatelessWidget {
                   margin: const EdgeInsets.only(top: 15, bottom: 15, right: 25),
                   child: GestureDetector(
                     onTap: () {
-                      Navigator.pushReplacementNamed(context, ('/'));
+                      showDialog(
+                        context: context,
+                        builder: (context) => AddUser(),
+                      );
                     },
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(25),
