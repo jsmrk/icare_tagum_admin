@@ -17,12 +17,20 @@ class SideNav extends StatelessWidget {
             Expanded(
               flex: 3,
               child: Container(
-                decoration: const BoxDecoration(
+                margin: const EdgeInsets.only(right: 3),
+                decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(25),
-                    bottomRight: Radius.circular(25),
+                  borderRadius: const BorderRadius.only(
+                    topRight: Radius.circular(0),
+                    bottomRight: Radius.circular(0),
                   ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.3),
+                      blurRadius: 5.0,
+                      offset: const Offset(1, 1),
+                    ),
+                  ],
                 ),
                 alignment: Alignment.center,
                 child: Column(
