@@ -1,6 +1,4 @@
 import 'dart:ui';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:icare_tagum_admin/manage_users/model/add_user_model.dart';
 import 'package:icare_tagum_admin/manage_users/services/add_user_service.dart';
@@ -18,7 +16,6 @@ class AddUser extends StatefulWidget {
 class _AddUserState extends State<AddUser> {
   String? _selectedRole;
   String? _selectedDepartment;
-
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final positionController = TextEditingController();
@@ -51,7 +48,7 @@ class _AddUserState extends State<AddUser> {
             ),
           ),
           Container(
-              padding: EdgeInsets.all(45),
+              padding: const EdgeInsets.all(45),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(25),
@@ -80,7 +77,7 @@ class _AddUserState extends State<AddUser> {
                   const SizedBox(height: 23),
                   AddUserDropdown(
                     child: DropdownButton<String>(
-                      hint: Text('Select User Role'),
+                      hint: const Text('Select User Role'),
                       isExpanded: true,
                       style: const TextStyle(
                           fontFamily: 'Inter',
@@ -109,7 +106,7 @@ class _AddUserState extends State<AddUser> {
                   const SizedBox(height: 23),
                   AddUserDropdown(
                     child: DropdownButton<String>(
-                      hint: Text('Select User Department'),
+                      hint: const Text('Select User Department'),
                       isExpanded: true,
                       style: const TextStyle(
                           fontFamily: 'Inter',
@@ -156,6 +153,10 @@ class _AddUserState extends State<AddUser> {
                             context,
                             emailController,
                             passwordController,
+                            nameController,
+                            _selectedRole as String,
+                            positionController,
+                            _selectedDepartment as String,
                           );
                         },
                         tColor: Colors.white,

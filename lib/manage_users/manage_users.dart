@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:icare_tagum_admin/manage_users/add_user.dart';
+import 'package:icare_tagum_admin/manage_users/model/read_user_model.dart';
+import 'package:icare_tagum_admin/manage_users/services/read_user_service.dart';
 
-class ManageUsers extends StatelessWidget {
+class ManageUsers extends StatefulWidget {
   const ManageUsers({super.key});
 
+  @override
+  State<ManageUsers> createState() => _ManageUsersState();
+}
+
+class _ManageUsersState extends State<ManageUsers> {
+  int index = 1;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,161 +88,111 @@ class ManageUsers extends StatelessWidget {
                 ),
               ],
             ),
-            DataTable(
-                border: const TableBorder(
-                  horizontalInside: BorderSide(
-                    width: 1,
-                    color: Colors.white,
-                    style: BorderStyle.solid,
-                  ),
-                ),
-                headingRowHeight: 45,
-                headingRowColor: const MaterialStatePropertyAll(
-                  Color(0xFFF9FAFB),
-                ),
-                headingTextStyle: const TextStyle(
-                  fontFamily: 'Inter',
-                  color: Colors.grey,
-                ),
-                dataRowMinHeight: 65,
-                dataRowMaxHeight: 65,
-                dataTextStyle: const TextStyle(
-                    fontFamily: 'Inter',
-                    color: Color.fromARGB(255, 75, 75, 75),
-                    fontSize: 13),
-                columns: const [
-                  DataColumn(
-                    label: Text('ID'),
-                  ),
-                  DataColumn(
-                    label: Text('Name'),
-                  ),
-                  DataColumn(
-                    label: Text('Position'),
-                  ),
-                  DataColumn(
-                    label: Text('Department'),
-                  ),
-                  DataColumn(
-                    label: Text('Date Created'),
-                  ),
-                  DataColumn(
-                    label: Text('Actions'),
-                  ),
-                ],
-                rows: [
-                  DataRow(cells: [
-                    const DataCell(
-                      Text('0'),
-                    ),
-                    DataCell(
-                      Text(DateTime.now().toString()),
-                    ),
-                    const DataCell(
-                      Text('High'),
-                    ),
-                    const DataCell(
-                      Text('Not Viewed'),
-                    ),
-                    const DataCell(
-                      Text('Not Viewed'),
-                    ),
-                    const DataCell(
-                      Row(
-                        children: [
-                          IconButton(
-                            onPressed: null,
-                            icon: Icon(
-                              Icons.edit_outlined,
-                              color: Colors.green,
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: null,
-                            icon: Icon(
-                              Icons.delete_outline_outlined,
-                              color: Color.fromARGB(255, 250, 119, 110),
-                            ),
-                          ),
-                        ],
+            StreamBuilder<List<UserDetails>>(
+              stream: readUserDetails(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  final userDetail = snapshot.data!;
+                  return DataTable(
+                    border: const TableBorder(
+                      horizontalInside: BorderSide(
+                        width: 1,
+                        color: Colors.white,
+                        style: BorderStyle.solid,
                       ),
                     ),
-                  ]),
-                  DataRow(cells: [
-                    const DataCell(
-                      Text('0'),
+                    headingRowHeight: 45,
+                    headingRowColor: const MaterialStatePropertyAll(
+                      Color(0xFFF9FAFB),
                     ),
-                    DataCell(
-                      Text(DateTime.now().toString()),
+                    headingTextStyle: const TextStyle(
+                      fontFamily: 'Inter',
+                      color: Colors.grey,
                     ),
-                    const DataCell(
-                      Text('High'),
+                    dataRowMinHeight: 65,
+                    dataRowMaxHeight: 65,
+                    dataTextStyle: const TextStyle(
+                      fontFamily: 'Inter',
+                      color: Color.fromARGB(255, 75, 75, 75),
+                      fontSize: 13,
                     ),
-                    const DataCell(
-                      Text('Not Viewed'),
-                    ),
-                    const DataCell(
-                      Text('Not Viewed'),
-                    ),
-                    const DataCell(
-                      Row(
-                        children: [
-                          IconButton(
-                            onPressed: null,
-                            icon: Icon(
-                              Icons.edit_outlined,
-                              color: Colors.green,
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: null,
-                            icon: Icon(
-                              Icons.delete_outline_outlined,
-                              color: Color.fromARGB(255, 250, 119, 110),
-                            ),
-                          ),
-                        ],
+                    columns: const [
+                      DataColumn(
+                        label: Text('#'),
                       ),
-                    ),
-                  ]),
-                  DataRow(cells: [
-                    const DataCell(
-                      Text('0'),
-                    ),
-                    DataCell(
-                      Text(DateTime.now().toString()),
-                    ),
-                    const DataCell(
-                      Text('High'),
-                    ),
-                    const DataCell(
-                      Text('Not Viewed'),
-                    ),
-                    const DataCell(
-                      Text('Not Viewed'),
-                    ),
-                    const DataCell(
-                      Row(
-                        children: [
-                          IconButton(
-                            onPressed: null,
-                            icon: Icon(
-                              Icons.edit_outlined,
-                              color: Colors.green,
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: null,
-                            icon: Icon(
-                              Icons.delete_outline_outlined,
-                              color: Color.fromARGB(255, 250, 119, 110),
-                            ),
-                          ),
-                        ],
+                      DataColumn(
+                        label: Text('Role'),
                       ),
-                    ),
-                  ]),
-                ]),
+                      DataColumn(
+                        label: Text('Name'),
+                      ),
+                      DataColumn(
+                        label: Text('Email'),
+                      ),
+                      DataColumn(
+                        label: Text('Position'),
+                      ),
+                      DataColumn(
+                        label: Text('Department'),
+                      ),
+                      DataColumn(
+                        label: Text('Date Created'),
+                      ),
+                      DataColumn(
+                        label: Text('Actions'),
+                      ),
+                    ],
+                    rows: userDetail
+                        .map((userDetail) => DataRow(
+                              cells: [
+                                DataCell(Text('${index++}')),
+                                DataCell(Text(userDetail.role)),
+                                DataCell(Text(userDetail.name)),
+                                DataCell(Text(userDetail.email)),
+                                DataCell(Text(userDetail.position)),
+                                DataCell(Text(userDetail.department)),
+                                DataCell(Text(
+                                    userDetail.dateTime.toIso8601String())),
+                                DataCell(Row(
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {
+                                        /* Edit button function */
+                                      },
+                                      icon: const Icon(
+                                        Icons.edit_outlined,
+                                        color: Colors.green,
+                                      ),
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        /* Delete button function */
+                                      },
+                                      icon: const Icon(
+                                        Icons.delete_outline_outlined,
+                                        color:
+                                            Color.fromARGB(255, 250, 119, 110),
+                                      ),
+                                    ),
+                                  ],
+                                )),
+                              ],
+                            ))
+                        .toList(),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                }
+                return const Stack(
+                  children: [
+                    Visibility(
+                        child: Center(
+                      child: CircularProgressIndicator(),
+                    ))
+                  ],
+                );
+              },
+            ),
           ],
         ),
       ),

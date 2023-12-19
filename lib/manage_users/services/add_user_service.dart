@@ -1,10 +1,19 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:icare_tagum_admin/manage_users/add_user.dart';
 
-Future<void> signUp(BuildContext context, TextEditingController emailController,
-    TextEditingController passwordController) async {
+Future<void> signUp(
+  BuildContext context,
+  TextEditingController emailController,
+  TextEditingController passwordController,
+  TextEditingController nameController,
+  String roleController,
+  TextEditingController positionController,
+  String departmentController,
+) async {
   final String email = emailController.text.trim();
   final String password = passwordController.text.trim();
 
@@ -22,8 +31,14 @@ Future<void> signUp(BuildContext context, TextEditingController emailController,
 
     final UserCredential userCredential = await FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email, password: password);
+    addUserDetails(
+      nameController.text,
+      emailController.text,
+      roleController,
+      positionController.text,
+      departmentController,
+    );
 
-    // Hide progress indicator and handle successful signup
     Navigator.pop(context);
     showSuccessDialog(context);
     Navigator.of(context).pushReplacementNamed('/');
@@ -31,6 +46,23 @@ Future<void> signUp(BuildContext context, TextEditingController emailController,
     Navigator.pop(context); // Hide progress indicator
     showErrorDialog(context, e.message!);
   }
+}
+
+Future addUserDetails(
+  String name,
+  String email,
+  String role,
+  String position,
+  String department,
+) async {
+  await FirebaseFirestore.instance.collection('users').add({
+    'name': name,
+    'email': email,
+    'role': role,
+    'position': position,
+    'department': department,
+    'datetime': DateTime.now(),
+  });
 }
 
 Widget _buildProgressIndicator() {
