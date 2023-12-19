@@ -1,7 +1,11 @@
 import 'dart:ui';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:icare_tagum_admin/manage_users/model/add_user_model.dart';
+import 'package:icare_tagum_admin/manage_users/services/add_user_service.dart';
 import 'package:icare_tagum_admin/manage_users/widgets/add_user_button.dart';
+import 'package:icare_tagum_admin/manage_users/widgets/add_user_dropdown.dart';
 import 'package:icare_tagum_admin/manage_users/widgets/add_user_textfield.dart';
 
 class AddUser extends StatefulWidget {
@@ -12,8 +16,9 @@ class AddUser extends StatefulWidget {
 }
 
 class _AddUserState extends State<AddUser> {
-  String _selectedRole = 'Moderator';
-  List<String> role = ['Moderator', 'Administrator'];
+  String? _selectedRole;
+  String? _selectedDepartment;
+
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final positionController = TextEditingController();
@@ -25,7 +30,7 @@ class _AddUserState extends State<AddUser> {
     return Card(
       margin: const EdgeInsets.only(
         left: 750,
-        right: 550,
+        right: 650,
         top: 151,
         bottom: 151,
       ),
@@ -73,14 +78,9 @@ class _AddUserState extends State<AddUser> {
                     controller: emailController,
                   ),
                   const SizedBox(height: 23),
-                  Container(
-                    padding: const EdgeInsets.only(left: 15, right: 15),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.rectangle,
-                      border: Border.all(width: .3),
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
+                  AddUserDropdown(
                     child: DropdownButton<String>(
+                      hint: Text('Select User Role'),
                       isExpanded: true,
                       style: const TextStyle(
                           fontFamily: 'Inter',
@@ -107,9 +107,28 @@ class _AddUserState extends State<AddUser> {
                     controller: positionController,
                   ),
                   const SizedBox(height: 23),
-                  AddUserTextfield(
-                    label: const Text('Department'),
-                    controller: departmentController,
+                  AddUserDropdown(
+                    child: DropdownButton<String>(
+                      hint: Text('Select User Department'),
+                      isExpanded: true,
+                      style: const TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 15,
+                          color: Color.fromARGB(255, 89, 89, 89)),
+                      underline: const SizedBox.square(),
+                      value: _selectedDepartment,
+                      items: userDepartments.map((item) {
+                        return DropdownMenuItem<String>(
+                          value: item,
+                          child: Text(item),
+                        );
+                      }).toList(),
+                      onChanged: (item) {
+                        setState(() {
+                          _selectedDepartment = item!;
+                        });
+                      },
+                    ),
                   ),
                   const SizedBox(height: 23),
                   AddUserTextfield(
@@ -132,7 +151,13 @@ class _AddUserState extends State<AddUser> {
                       const SizedBox(width: 35),
                       AddUserButton(
                         buttonName: 'Add User',
-                        onTap: () {},
+                        onTap: () {
+                          signUp(
+                            context,
+                            emailController,
+                            passwordController,
+                          );
+                        },
                         tColor: Colors.white,
                         bColor: Colors.green,
                         icon: Icons.add,
