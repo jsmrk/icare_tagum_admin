@@ -38,10 +38,9 @@ Future<void> signUp(
       positionController.text,
       departmentController,
     );
-
     Navigator.pop(context);
     showSuccessDialog(context);
-    Navigator.of(context).pushReplacementNamed('/');
+    // Navigator.of(context).pushReplacementNamed('/');
   } on FirebaseAuthException catch (e) {
     Navigator.pop(context); // Hide progress indicator
     showErrorDialog(context, e.message!);
@@ -81,7 +80,10 @@ void showSuccessDialog(BuildContext context) {
       content: const Text('You have successfully created a new account.'),
       actions: [
         TextButton(
-          onPressed: () => Navigator.pop(context),
+          onPressed: () {
+            Navigator.pop(context);
+            Navigator.pop(context);
+          },
           child: const Text('OK'),
         ),
       ],
