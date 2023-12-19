@@ -25,7 +25,7 @@ Future<void> signUp(
   try {
     showDialog(
       context: context,
-      barrierDismissible: false, // Prevent user interaction while loading
+      barrierDismissible: false,
       builder: (context) => _buildProgressIndicator(),
     );
 
