@@ -20,7 +20,7 @@ class WriteUpdate extends StatelessWidget {
             ),
           ],
         ),
-        margin: const EdgeInsets.all(25),
+        margin: const EdgeInsets.all(15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
