@@ -23,7 +23,7 @@ class _WriteUpdateState extends State<WriteUpdate> {
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
 
-  List<Uint8List> selectedImages = [];
+  List<Future<Uint8List>> selectedImages = [];
   final picker = ImagePickerPlugin();
 
   Future getImages() async {
@@ -31,10 +31,8 @@ class _WriteUpdateState extends State<WriteUpdate> {
       final pickedFile = await picker.getMultiImageWithOptions();
       if (pickedFile != null) {
         setState(() {
-          selectedImages =
-              pickedFile.map((e) => e.readAsBytes()).cast<Uint8List>().toList();
+          selectedImages = pickedFile.map((e) => e.readAsBytes()).toList();
         });
-        setState(() {});
       } else {
         showDialog(
           context: context,
