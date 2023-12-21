@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:icare_tagum_admin/login/login_screen.dart';
-import 'package:icare_tagum_admin/write_update/write_update.dart';
+import 'package:icare_tagum_admin/write_update/views/write_update.dart';
 
 class ManageUpdates extends StatelessWidget {
   const ManageUpdates({super.key});

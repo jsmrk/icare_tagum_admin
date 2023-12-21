@@ -55,45 +55,71 @@ class _WriteUpdateState extends State<WriteUpdate> {
 
   Future<void> uploadUpdate() async {
     List<String> downloadURLs = [];
-    try {
-      showDialog(
-        context: context,
-        barrierDismissible: false, // Prevent closing the dialog
-        builder: (context) => const Center(
-            child: CircularProgressIndicator(
-          color: Colors.green,
-        )),
-      );
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Confirm Upload'),
+        content: const Text('Are you sure you want to upload the update?'),
+        actions: [
+          TextButton(
+            onPressed: () =>
+                Navigator.pop(context, false), // Close dialog without upload
+            child: const Text('No'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(
+                context, true), // Close dialog and proceed with upload
+            child: const Text('Yes'),
+          ),
+        ],
+      ),
+    ).then((uploadConfirmed) async {
+      if (uploadConfirmed) {
+        try {
+          try {
+            showDialog(
+              context: context,
+              barrierDismissible: false, // Prevent closing the dialog
+              builder: (context) => const Center(
+                  child: CircularProgressIndicator(
+                color: Colors.green,
+              )),
+            );
 
-      for (int index = 0; index < selectedImages.length; index++) {
-        final bytes = await selectedImages[index]; // Await the Uint8List
-        final ref =
-            FirebaseStorage.instance.ref('updateImages/${DateTime.now()}.jpg');
-        final uploadTask = ref.putData(bytes);
-        await uploadTask; // Await the upload completion
-        final downloadURL = await ref.getDownloadURL();
-        downloadURLs.add(downloadURL);
+            for (int index = 0; index < selectedImages.length; index++) {
+              final bytes = await selectedImages[index]; // Await the Uint8List
+              final ref = FirebaseStorage.instance
+                  .ref('updateImages/${DateTime.now()}.jpg');
+              final uploadTask = ref.putData(bytes);
+              await uploadTask; // Await the upload completion
+              final downloadURL = await ref.getDownloadURL();
+              downloadURLs.add(downloadURL);
+            }
+
+            addUpdate.addUpdate(
+              title: titleController.text,
+              description: descriptionController.text,
+              imageURLs: downloadURLs,
+            );
+
+            Navigator.pop(context); // Close the loading dialog
+            Navigator.pop(context); // Close the main screen
+          } catch (e) {
+            print("Error uploading image: $e");
+            Navigator.pop(context); // Close the loading dialog on error
+          }
+        } catch (e) {
+          // ... error handling
+        }
       }
-
-      addUpdate.addUpdate(
-        title: titleController.text,
-        description: descriptionController.text,
-        imageURLs: downloadURLs,
-      );
-
-      Navigator.pop(context); // Close the loading dialog
-      Navigator.pop(context); // Close the main screen
-    } catch (e) {
-      print("Error uploading image: $e");
-      Navigator.pop(context); // Close the loading dialog on error
-    }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.only(
-        left: 450,
+        left: 713,
         right: 650,
         top: 111,
         bottom: 95,
