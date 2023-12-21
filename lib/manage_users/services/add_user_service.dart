@@ -31,7 +31,9 @@ Future<void> signUp(
 
     final UserCredential userCredential = await FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email, password: password);
+    final String uid = userCredential.user!.uid;
     addUserDetails(
+      uid,
       nameController.text,
       emailController.text,
       roleController,
@@ -48,13 +50,15 @@ Future<void> signUp(
 }
 
 Future addUserDetails(
+  String uid,
   String name,
   String email,
   String role,
   String position,
   String department,
 ) async {
-  await FirebaseFirestore.instance.collection('users').add({
+  await FirebaseFirestore.instance.collection('users').doc(uid).set({
+    'uid': uid,
     'name': name,
     'email': email,
     'role': role,

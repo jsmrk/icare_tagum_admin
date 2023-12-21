@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:icare_tagum_admin/login/services/login_services.dart';
 import 'package:icare_tagum_admin/login/widgets/login_textfield.dart';
 import 'package:icare_tagum_admin/side_nav/side_nav.dart';
 
@@ -94,8 +95,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.pushReplacementNamed(
-                            context, SideNav.routeName);
+                        signIn(
+                          context,
+                          emailController,
+                          passwordController,
+                        );
                       },
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(25),

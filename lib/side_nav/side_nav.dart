@@ -1,13 +1,36 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:icare_tagum_admin/auth/auth.dart';
 import 'package:icare_tagum_admin/side_nav/nav_controller.dart';
 import 'package:icare_tagum_admin/side_nav/widgets/nav_listtile.dart';
 
-class SideNav extends StatelessWidget {
+import 'services/user_detail.dart';
+
+class SideNav extends StatefulWidget {
   static const routeName = '/sidenav-screen';
   const SideNav({super.key});
 
   @override
+  State<SideNav> createState() => _SideNavState();
+}
+
+class _SideNavState extends State<SideNav> {
+  String? userName;
+  String? userRole;
+
+  @override
+  void initState() {
+    super.initState();
+    getUserDetails(
+      (userData) => setState(() {
+        userName = userData['name'];
+        userRole = userData['role'];
+      }),
+      (error) => print(error), // Handle error silently in this example
+    );
+  }
+
   Widget build(BuildContext context) {
     NavController navController = Get.put(NavController());
     return Scaffold(
@@ -89,21 +112,21 @@ class SideNav extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(width: 5),
-                          const Column(
+                          Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Jess Mark A. Baguio',
-                                style: TextStyle(
+                                userName.toString(),
+                                style: const TextStyle(
                                     fontFamily: 'Inter',
                                     color: Colors.green,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 13),
                               ),
                               Text(
-                                'Admin',
-                                style: TextStyle(
+                                userRole.toString(),
+                                style: const TextStyle(
                                     fontFamily: 'Inter',
                                     fontWeight: FontWeight.bold,
                                     fontSize: 13),
@@ -111,14 +134,16 @@ class SideNav extends StatelessWidget {
                             ],
                           ),
                           const SizedBox(width: 5),
-                          const IconButton(
-                            onPressed: null,
-                            icon: Icon(
+                          IconButton(
+                            onPressed: () {
+                              FirebaseAuth.instance.signOut();
+                            },
+                            icon: const Icon(
                               Icons.logout_rounded,
                               size: 23,
                               color: Colors.black,
                             ),
-                          )
+                          ),
                         ],
                       ),
                     )

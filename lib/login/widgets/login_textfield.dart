@@ -15,6 +15,7 @@ class LoginTextfield extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      style: const TextStyle(color: Colors.white),
       controller: controller,
       obscureText: obscure,
       decoration: InputDecoration(
