@@ -54,7 +54,7 @@ class _DisplaySelectedImagesState extends State<DisplaySelectedImages> {
                   future: _getImageProvider(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      return Container(
+                      return SizedBox(
                         height: 235,
                         width: 467,
                         child: ClipRRect(

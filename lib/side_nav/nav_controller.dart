@@ -8,8 +8,7 @@ class NavController extends GetxController {
   RxInt index = 0.obs;
 
   var pages = [
-    WriteUpdate(),
-    // ManageUpdates(),
+    ManageUpdates(),
     ManageConcern(),
     ManageUsers(),
   ];

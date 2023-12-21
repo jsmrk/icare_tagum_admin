@@ -56,6 +56,15 @@ class _WriteUpdateState extends State<WriteUpdate> {
   Future<void> uploadUpdate() async {
     List<String> downloadURLs = [];
     try {
+      showDialog(
+        context: context,
+        barrierDismissible: false, // Prevent closing the dialog
+        builder: (context) => const Center(
+            child: CircularProgressIndicator(
+          color: Colors.green,
+        )),
+      );
+
       for (int index = 0; index < selectedImages.length; index++) {
         final bytes = await selectedImages[index]; // Await the Uint8List
         final ref =
@@ -72,18 +81,11 @@ class _WriteUpdateState extends State<WriteUpdate> {
         imageURLs: downloadURLs,
       );
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Updates added successfully'),
-          backgroundColor: Colors.green,
-        ),
-      );
-
-      Navigator.pop(context);
+      Navigator.pop(context); // Close the loading dialog
+      Navigator.pop(context); // Close the main screen
     } catch (e) {
       print("Error uploading image: $e");
-    } finally {
-      Navigator.pop(context);
+      Navigator.pop(context); // Close the loading dialog on error
     }
   }
 
