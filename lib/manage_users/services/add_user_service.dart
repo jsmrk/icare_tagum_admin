@@ -3,7 +3,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:icare_tagum_admin/manage_users/add_user.dart';
 
 Future<void> signUp(
   BuildContext context,

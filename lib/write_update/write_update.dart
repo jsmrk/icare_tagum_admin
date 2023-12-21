@@ -1,15 +1,14 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'dart:io';
+import 'dart:typed_data';
 import 'dart:ui';
-
+import 'package:image_picker_for_web/image_picker_for_web.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:icare_tagum_admin/write_update/services/saving_update.dart';
 import 'package:icare_tagum_admin/write_update/widgets/display_images.dart';
 import 'package:icare_tagum_admin/write_update/widgets/write_update_button.dart';
 import 'package:icare_tagum_admin/write_update/widgets/write_update_textfield.dart';
-import 'package:image_picker/image_picker.dart';
 
 class WriteUpdate extends StatefulWidget {
   WriteUpdate({super.key});
@@ -19,76 +18,76 @@ class WriteUpdate extends StatefulWidget {
 }
 
 class _WriteUpdateState extends State<WriteUpdate> {
+  final addUpdate = GovernmentUpdates();
+
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
-  final authorController = TextEditingController();
 
-  List<File> selectedImages = [];
-  final picker = ImagePicker();
+  List<Uint8List> selectedImages = [];
+  final picker = ImagePickerPlugin();
 
   Future getImages() async {
-    final pickedFile = await picker.pickMultiImage(
-      imageQuality: 100,
-      maxHeight: 1000,
-      maxWidth: 1000,
-    );
-    List<XFile> xfilePick = pickedFile;
-
-    if (xfilePick.isNotEmpty) {
-      for (var i = 0; i < xfilePick.length; i++) {
-        selectedImages.add(File(xfilePick[i].path));
+    try {
+      final pickedFile = await picker.getMultiImageWithOptions();
+      if (pickedFile != null) {
+        setState(() {
+          selectedImages =
+              pickedFile.map((e) => e.readAsBytes()).cast<Uint8List>().toList();
+        });
+        setState(() {});
+      } else {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('No Images Selected'),
+            content: const Text('Please select at least one image.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
       }
-      setState(() {});
-    } else {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('No Images Selected'),
-          content: const Text('Please select at least one image.'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('OK'),
-            ),
-          ],
-        ),
-      );
+    } catch (e) {
+      print("getting image: $e");
     }
   }
-//asdasd
-  //   Future<void> uploadUpdate() async {
-  //   List<String> downloadURLs = [];
-  //   try {
-  //     for (int index = 0; index < selectedImages.length; index++) {
-  //       final storageRef = FirebaseStorage.instance.ref(
-  //         'updateImages/${selectedImages[index].path.split('/').last}',
-  //       );
-  //       final uploadTask = storageRef.putFile(selectedImages[index]);
-  //       await uploadTask.whenComplete(() => null);
-  //       final downloadURL = await storageRef.getDownloadURL();
-  //       downloadURLs.add(downloadURL);
-  //     }
 
-  //     readConcern.addConcern(
-  //       title: titleController.text,
-  //       description: descriptionController.text,
-  //       location: locationController.text,
-  //       urgency: _selectedUrgency,
-  //       imageURLs: downloadURLs,
-  //     );
+  Future<void> uploadUpdate() async {
+    List<String> downloadURLs = [];
+    try {
+      for (int index = 0; index < selectedImages.length; index++) {
+        final bytes = await selectedImages[index]; // Await the Uint8List
+        final ref =
+            FirebaseStorage.instance.ref('updateImages/${DateTime.now()}.jpg');
+        final uploadTask = ref.putData(bytes);
+        await uploadTask; // Await the upload completion
+        final downloadURL = await ref.getDownloadURL();
+        downloadURLs.add(downloadURL);
+      }
 
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       const SnackBar(
-  //         content: Text('Concern added successfully'),
-  //         backgroundColor: Colors.green,
-  //       ),
-  //     );
+      addUpdate.addUpdate(
+        title: titleController.text,
+        description: descriptionController.text,
+        imageURLs: downloadURLs,
+      );
 
-  //     Navigator.pop(context);
-  //   } finally {
-  //     Navigator.of(context).pop();
-  //   }
-  // }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Updates added successfully'),
+          backgroundColor: Colors.green,
+        ),
+      );
+
+      Navigator.pop(context);
+    } catch (e) {
+      print("Error uploading image: $e");
+    } finally {
+      Navigator.pop(context);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -210,7 +209,7 @@ class _WriteUpdateState extends State<WriteUpdate> {
                       const SizedBox(width: 35),
                       WriteUpdateButton(
                         buttonName: 'Add Update',
-                        onTap: () {},
+                        onTap: uploadUpdate,
                         tColor: Colors.white,
                         bColor: Colors.green,
                         icon: Icons.add,

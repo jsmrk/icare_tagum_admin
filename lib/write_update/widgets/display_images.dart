@@ -1,10 +1,11 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class DisplaySelectedImages extends StatefulWidget {
-  List<File> selectedImages = [];
+  List<Uint8List> selectedImages = [];
 
   DisplaySelectedImages({required this.selectedImages, Key? key})
       : super(key: key);
@@ -48,17 +49,14 @@ class _DisplaySelectedImagesState extends State<DisplaySelectedImages> {
                   width: 467,
                   margin: const EdgeInsets.symmetric(horizontal: 1),
                   child: ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(15)),
-                    child: kIsWeb
-                        ? Image.network(
-                            widget.selectedImages[_currentImageIndex].path,
-                            fit: BoxFit.cover,
-                          )
-                        : Image.file(
-                            widget.selectedImages[_currentImageIndex],
-                            fit: BoxFit.cover,
-                          ),
-                  ),
+                      borderRadius: const BorderRadius.all(Radius.circular(15)),
+                      child: kIsWeb
+                          ? Image.memory(
+                              widget.selectedImages[_currentImageIndex]
+                                  as Uint8List, // Await here
+                              fit: BoxFit.cover,
+                            )
+                          : null),
                 ),
 
                 // Left button for previous image
@@ -70,8 +68,7 @@ class _DisplaySelectedImagesState extends State<DisplaySelectedImages> {
                       icon: const Icon(Icons.arrow_left),
                       onPressed: _previousImage,
                       style: const ButtonStyle(
-                        backgroundColor:
-                            MaterialStatePropertyAll(Colors.white54),
+                        backgroundColor: MaterialStatePropertyAll(Colors.white),
                       ),
                     ),
                   ),
@@ -90,31 +87,6 @@ class _DisplaySelectedImagesState extends State<DisplaySelectedImages> {
                       ),
                     ),
                   ),
-
-                // Dots for multiple images (if needed)
-                // if (widget.selectedImages.length > 1)
-                //   Positioned(
-                //     bottom: 11,
-                //     left: 0,
-                //     right: 0,
-                //     child: Row(
-                //       mainAxisAlignment: MainAxisAlignment.center,
-                //       children: List.generate(
-                //         widget.selectedImages.length,
-                //         (index) => Container(
-                //           margin: const EdgeInsets.symmetric(horizontal: 5),
-                //           width: 11,
-                //           height: 11,
-                //           decoration: BoxDecoration(
-                //             shape: BoxShape.circle,
-                //             color: index == _currentImageIndex
-                //                 ? Colors.green
-                //                 : Colors.grey,
-                //           ),
-                //         ),
-                //       ),
-                //     ),
-                //   ),
               ],
             ),
     );
