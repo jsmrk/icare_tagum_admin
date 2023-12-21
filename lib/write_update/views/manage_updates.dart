@@ -171,7 +171,9 @@ class ManageUpdates extends StatelessWidget {
                   children: [
                     Visibility(
                         child: Center(
-                      child: CircularProgressIndicator(),
+                      child: CircularProgressIndicator(
+                        color: Colors.green,
+                      ),
                     ))
                   ],
                 );

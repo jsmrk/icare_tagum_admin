@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:icare_tagum_admin/manage_concern/models/read_concerns_model.dart';
+import 'package:icare_tagum_admin/manage_concern/services/read_concerns_service.dart';
 
 class ManageConcern extends StatelessWidget {
   const ManageConcern({super.key});
@@ -34,125 +36,105 @@ class ManageConcern extends StatelessWidget {
                     color: Colors.green),
               ),
             ),
-            DataTable(
-                border: const TableBorder(
-                  horizontalInside: BorderSide(
-                    width: 1,
-                    color: Colors.white,
-                    style: BorderStyle.solid,
-                  ),
-                ),
-                headingRowHeight: 45,
-                headingRowColor: const MaterialStatePropertyAll(
-                  Color(0xFFF9FAFB),
-                ),
-                headingTextStyle: const TextStyle(
-                  fontFamily: 'Inter',
-                  color: Colors.grey,
-                ),
-                dataRowMinHeight: 65,
-                dataRowMaxHeight: 65,
-                dataTextStyle: const TextStyle(
-                    fontFamily: 'Inter',
-                    color: Color.fromARGB(255, 75, 75, 75),
-                    fontSize: 13),
-                columns: const [
-                  DataColumn(
-                    label: Text('ID'),
-                  ),
-                  DataColumn(
-                    label: Text('Date'),
-                  ),
-                  DataColumn(
-                    label: Text('Urgency'),
-                  ),
-                  DataColumn(
-                    label: Text('Status'),
-                  ),
-                  DataColumn(
-                    label: Text('Department'),
-                  ),
-                  DataColumn(
-                    label: Text('Action'),
-                  ),
-                ],
-                rows: [
-                  DataRow(cells: [
-                    const DataCell(
-                      Text('0'),
+            StreamBuilder<List<ConcernDetails>>(
+              stream: readConcernDetails(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  final concernDetails = snapshot.data!;
+                  return DataTable(
+                    border: const TableBorder(
+                      horizontalInside: BorderSide(
+                        width: 1,
+                        color: Colors.white,
+                        style: BorderStyle.solid,
+                      ),
                     ),
-                    DataCell(
-                      Text(DateTime.now().toString()),
+                    headingRowHeight: 45,
+                    headingRowColor: const MaterialStatePropertyAll(
+                      Color(0xFFF9FAFB),
                     ),
-                    const DataCell(
-                      Text('High'),
+                    headingTextStyle: const TextStyle(
+                      fontFamily: 'Inter',
+                      color: Colors.grey,
                     ),
-                    const DataCell(
-                      Text('Not Viewed'),
+                    dataRowMinHeight: 65,
+                    dataRowMaxHeight: 65,
+                    dataTextStyle: const TextStyle(
+                      fontFamily: 'Inter',
+                      color: Color.fromARGB(255, 75, 75, 75),
+                      fontSize: 13,
                     ),
-                    const DataCell(
-                      Text('Not Yet Assigned'),
-                    ),
-                    const DataCell(
-                      IconButton(
-                          onPressed: null,
-                          icon: Icon(
-                            Icons.edit_outlined,
-                            color: Colors.green,
-                          )),
-                    ),
-                  ]),
-                  DataRow(cells: [
-                    const DataCell(
-                      Text('0'),
-                    ),
-                    DataCell(
-                      Text(DateTime.now().toString()),
-                    ),
-                    const DataCell(
-                      Text('High'),
-                    ),
-                    const DataCell(
-                      Text('Not Viewed'),
-                    ),
-                    const DataCell(
-                      Text('Not Yet Assigned'),
-                    ),
-                    const DataCell(
-                      IconButton(
-                          onPressed: null,
-                          icon: Icon(
-                            Icons.edit_outlined,
-                            color: Colors.green,
-                          )),
-                    ),
-                  ]),
-                  DataRow(cells: [
-                    const DataCell(
-                      Text('0'),
-                    ),
-                    DataCell(
-                      Text(DateTime.now().toString()),
-                    ),
-                    const DataCell(
-                      Text('High'),
-                    ),
-                    const DataCell(
-                      Text('Not Viewed'),
-                    ),
-                    const DataCell(
-                      Text('Not Yet Assigned'),
-                    ),
-                    const DataCell(
-                      IconButton(
-                          onPressed: null,
-                          icon: Icon(
-                            Icons.edit_outlined,
-                            color: Colors.green,
-                          )),
-                    ),
-                  ]),
-                ]),
+                    columns: const [
+                      DataColumn(
+                        label: Text('Title'),
+                      ),
+                      DataColumn(
+                        label: Text('Urgency'),
+                      ),
+                      DataColumn(
+                        label: Text('Status'),
+                      ),
+                      DataColumn(
+                        label: Text('Department'),
+                      ),
+                      DataColumn(
+                        label: Text('Date'),
+                      ),
+                      DataColumn(
+                        label: Text('Actions'),
+                      ),
+                    ],
+                    rows: concernDetails
+                        .map((concernDetails) => DataRow(
+                              cells: [
+                                DataCell(Text(concernDetails.title)),
+                                DataCell(Text(concernDetails.urgency)),
+                                DataCell(Text(concernDetails.status)),
+                                DataCell(Text(concernDetails.department)),
+                                DataCell(Text(
+                                    concernDetails.dateTime.toIso8601String())),
+                                DataCell(Row(
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {
+                                        /* Edit button function */
+                                      },
+                                      icon: const Icon(
+                                        Icons.edit_outlined,
+                                        color: Colors.green,
+                                      ),
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        /* Delete button function */
+                                      },
+                                      icon: const Icon(
+                                        Icons.delete_outline_outlined,
+                                        color:
+                                            Color.fromARGB(255, 250, 119, 110),
+                                      ),
+                                    ),
+                                  ],
+                                )),
+                              ],
+                            ))
+                        .toList(),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                }
+                return const Stack(
+                  children: [
+                    Visibility(
+                        child: Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.green,
+                      ),
+                    ))
+                  ],
+                );
+              },
+            ),
           ],
         ),
       ),

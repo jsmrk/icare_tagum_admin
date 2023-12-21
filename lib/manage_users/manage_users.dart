@@ -187,7 +187,9 @@ class _ManageUsersState extends State<ManageUsers> {
                   children: [
                     Visibility(
                         child: Center(
-                      child: CircularProgressIndicator(),
+                      child: CircularProgressIndicator(
+                        color: Colors.green,
+                      ),
                     ))
                   ],
                 );
