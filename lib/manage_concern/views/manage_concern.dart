@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:icare_tagum_admin/manage_concern/Widgets/edit_btn_icon.dart';
 import 'package:icare_tagum_admin/manage_concern/models/read_concerns_model.dart';
 import 'package:icare_tagum_admin/manage_concern/services/read_concerns_service.dart';
+import 'package:icare_tagum_admin/manage_concern/views/edit_concern.dart';
 
 class ManageConcern extends StatelessWidget {
   const ManageConcern({super.key});
@@ -97,7 +99,10 @@ class ManageConcern extends StatelessWidget {
                                   children: [
                                     IconButton(
                                       onPressed: () {
-                                        /* Edit button function */
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) => EditConcern(),
+                                        );
                                       },
                                       icon: const Icon(
                                         Icons.edit_outlined,
