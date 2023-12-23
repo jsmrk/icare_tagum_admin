@@ -23,7 +23,7 @@ class EditConcernButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(25),
         child: Container(
           height: 37,
-          width: 155,
+          width: 135,
           alignment: Alignment.center,
           color: bColor,
           child: Row(
@@ -34,7 +34,7 @@ class EditConcernButton extends StatelessWidget {
                 color: tColor,
                 size: 21,
               ),
-              const SizedBox(width: 7),
+              const SizedBox(width: 5),
               Text(
                 buttonName,
                 textAlign: TextAlign.center,
