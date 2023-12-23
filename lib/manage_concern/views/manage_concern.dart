@@ -99,11 +99,11 @@ class ManageConcern extends StatelessWidget {
                                   children: [
                                     IconButton(
                                       onPressed: () {
-                                        (showDialog(
+                                        showDialog(
                                           context: context,
                                           builder: (context) =>
                                               EditConcern(concernDetails),
-                                        ));
+                                        );
                                       },
                                       icon: const Icon(
                                         Icons.edit_outlined,

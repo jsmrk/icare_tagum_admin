@@ -1,11 +1,10 @@
 import 'dart:ui';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:icare_tagum_admin/manage_concern/Widgets/edit_concern_btn.dart';
-import 'package:icare_tagum_admin/manage_concern/Widgets/edit_concern_images.dart';
 import 'package:icare_tagum_admin/manage_concern/models/read_concerns_model.dart';
 import 'package:intl/intl.dart';
 
@@ -20,7 +19,9 @@ class EditConcern extends StatefulWidget {
 }
 
 class _EditConcernState extends State<EditConcern> {
+  PageController _pageController = PageController();
   int _currentImageIndex = 0;
+
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
 
@@ -66,72 +67,79 @@ class _EditConcernState extends State<EditConcern> {
   }
 
   Widget displayImages() {
-    return SizedBox(
-      height: 225,
-      width: 365,
-      child: widget.concernDetails.imageURLs!.isEmpty
-          ? const Center(child: Icon(Icons.image_rounded))
-          : Stack(
-              children: [
-                // PageView for sliding images
-                PageView.builder(
-                  itemCount: widget.concernDetails.imageURLs!.length,
-                  scrollDirection: Axis.horizontal,
-                  onPageChanged: (int newPageIndex) {
-                    setState(() {
-                      _currentImageIndex = newPageIndex;
-                    });
-                  },
-                  itemBuilder: (context, index) {
-                    return Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 1),
-                      child: ClipRRect(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(15)),
-                        child: _buildImageWidget(
-                            widget.concernDetails.imageURLs![index]),
-                      ),
-                    );
-                  },
-                ),
-
-                // Dots for multiple images
-                if (widget.concernDetails.imageURLs!.length > 1)
-                  Positioned(
-                    bottom: 11,
-                    left: 0,
-                    right: 0,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(
-                        widget.concernDetails.imageURLs!.length,
-                        (index) => Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 5),
-                          width: 11,
-                          height: 11,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: index == _currentImageIndex
-                                ? Colors.green
-                                : Colors.grey,
-                          ),
-                        ),
-                      ),
+    return Container(
+      height: 355,
+      width: 635,
+      child: Stack(
+        children: [
+          PageView.builder(
+            controller: _pageController,
+            itemCount: widget.concernDetails.imageURLs!.length,
+            onPageChanged: (index) {
+              setState(() {
+                _currentImageIndex = index;
+              });
+            },
+            itemBuilder: (context, index) {
+              return Stack(
+                children: [
+                  const Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.green,
+                    ), // Display loading indicator initially
+                  ),
+                  ClipRRect(
+                    borderRadius: const BorderRadius.all(Radius.circular(25)),
+                    child: Image.network(
+                      widget.concernDetails.imageURLs![index],
+                      fit: BoxFit.cover,
                     ),
                   ),
-              ],
+                ],
+              );
+            },
+          ),
+          if (widget.concernDetails.imageURLs!.length > 1)
+            Positioned(
+              left: 7,
+              top: 151,
+              child: IconButton(
+                style: const ButtonStyle(
+                  backgroundColor: MaterialStatePropertyAll(Colors.white54),
+                ),
+                icon: const Icon(Icons.arrow_left),
+                onPressed: () {
+                  if (_currentImageIndex > 0) {
+                    _pageController.previousPage(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.ease,
+                    );
+                  }
+                },
+              ),
             ),
-    );
-  }
-
-  Widget _buildImageWidget(String imageUrl) {
-    // Placeholder implementation using CachedNetworkImage
-    return CachedNetworkImage(
-      imageUrl: imageUrl,
-      fit: BoxFit.cover,
-      placeholder: (context, url) =>
-          const Center(child: CircularProgressIndicator()),
-      errorWidget: (context, url, error) => const Icon(Icons.error),
+          if (widget.concernDetails.imageURLs!.length > 1)
+            Positioned(
+              right: 7,
+              top: 151,
+              child: IconButton(
+                style: const ButtonStyle(
+                  backgroundColor: MaterialStatePropertyAll(Colors.white54),
+                ),
+                icon: const Icon(Icons.arrow_right),
+                onPressed: () {
+                  if (_currentImageIndex <
+                      widget.concernDetails.imageURLs!.length - 1) {
+                    _pageController.nextPage(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.ease,
+                    );
+                  }
+                },
+              ),
+            ),
+        ],
+      ),
     );
   }
 
@@ -162,7 +170,7 @@ class _EditConcernState extends State<EditConcern> {
           ),
           Container(
               padding: const EdgeInsets.only(
-                  left: 45, right: 45, top: 17, bottom: 17),
+                  left: 39, right: 39, top: 17, bottom: 17),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(25),
@@ -171,29 +179,18 @@ class _EditConcernState extends State<EditConcern> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // const Text(
-                    //   'Concern',
-                    //   style: TextStyle(
-                    //       fontFamily: 'Inter',
-                    //       fontSize: 35,
-                    //       fontWeight: FontWeight.bold,
-                    //       color: Colors.green),
-                    // ),
-                    const SizedBox(height: 25),
+                    const SizedBox(height: 15),
                     widget.concernDetails.imageURLs!.isNotEmpty
                         ? displayImages()
-                        : Row(children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(25),
-                              child: Image.asset(
-                                'lib/assets/images/sampleimage.png',
-                                height: 305,
-                                width: 577,
-                                fit: BoxFit.cover,
-                              ),
+                        : ClipRRect(
+                            borderRadius: BorderRadius.circular(25),
+                            child: Image.asset(
+                              'lib/assets/images/sampleimage.png',
+                              height: 305,
+                              width: 577,
+                              fit: BoxFit.cover,
                             ),
-                          ]),
-                    const SizedBox(height: 15),
+                          ),
                     Container(
                       alignment: Alignment.topLeft,
                       child: Text(widget.concernDetails.title,
@@ -224,13 +221,19 @@ class _EditConcernState extends State<EditConcern> {
                     smallDetails(
                         'Location :   ', widget.concernDetails.location),
                     const SizedBox(height: 15),
-                    Container(
-                      alignment: Alignment.topLeft,
-                      child: Text(widget.concernDetails.description,
-                          style: const TextStyle(
-                              fontSize: 17,
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w500)),
+                    SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      child: Text(
+                        widget.concernDetails.description,
+                        maxLines: 7,
+                        softWrap: true,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 17,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 25),
                   ],
