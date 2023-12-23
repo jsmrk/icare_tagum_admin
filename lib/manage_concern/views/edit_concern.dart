@@ -4,11 +4,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:icare_tagum_admin/manage_concern/Widgets/edit_concern_btn.dart';
+import 'package:icare_tagum_admin/manage_concern/models/read_concerns_model.dart';
+import 'package:intl/intl.dart';
 
 import '../Widgets/edit_concern_textfield.dart';
 
 class EditConcern extends StatefulWidget {
-  const EditConcern({super.key});
+  final ConcernDetails concernDetails;
+  const EditConcern(this.concernDetails, {super.key});
 
   @override
   State<EditConcern> createState() => _EditConcernState();
@@ -17,6 +20,45 @@ class EditConcern extends StatefulWidget {
 class _EditConcernState extends State<EditConcern> {
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
+
+  String getFormattedDate(ConcernDetails concernDetails) {
+    final dateTime = concernDetails.dateTime;
+    final formatter = DateFormat('yyyy-MM-dd'); // Customize format as needed
+    return formatter.format(dateTime);
+  }
+
+  String getFormattedTime(ConcernDetails concernDetails) {
+    final dateTime = concernDetails.dateTime;
+    final formatter = DateFormat('h:mm a'); // Customize format as needed
+    return formatter.format(dateTime);
+  }
+
+  Widget smallDetails(String title, String details) {
+    return Container(
+      alignment: Alignment.topLeft,
+      padding: const EdgeInsets.only(left: 1.9, bottom: 5),
+      child: RichText(
+        text: TextSpan(
+          children: [
+            TextSpan(
+              text: title,
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 13,
+              ),
+            ),
+            TextSpan(
+              text: details,
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 13,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,41 +118,38 @@ class _EditConcernState extends State<EditConcern> {
                     ),
                   ]),
                   const SizedBox(height: 5),
-                  EditConcernTextfield(
-                    label: const Text('Title'),
-                    controller: titleController,
+                  Container(
+                    alignment: Alignment.topLeft,
+                    child: Text(widget.concernDetails.title,
+                        style: const TextStyle(
+                            fontSize: 21,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w700)),
                   ),
-                  const SizedBox(height: 23),
-                  TextFormField(
-                    controller: descriptionController,
-                    maxLines: 5,
-                    keyboardType: TextInputType.multiline,
-                    decoration: const InputDecoration(
-                      labelText: 'Write Report Description',
-                      alignLabelWithHint: true,
-                      labelStyle: TextStyle(
-                          fontFamily: 'Inter',
-                          color: Color.fromARGB(255, 76, 76, 76),
-                          fontSize: 15),
-                      floatingLabelStyle: TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 19,
-                        color: Colors.green,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(15),
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(15),
-                        ),
-                        borderSide: BorderSide(
-                            color: Color.fromARGB(255, 126, 126, 126),
-                            width: 1.9), // Thicker border when focused
-                      ),
-                    ),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        smallDetails(
+                            'Author :   ', widget.concernDetails.nickname),
+                        smallDetails(
+                            '', getFormattedDate(widget.concernDetails)),
+                      ]),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        smallDetails(
+                            'Urgency :   ', widget.concernDetails.urgency),
+                        smallDetails(
+                            '', getFormattedTime(widget.concernDetails)),
+                      ]),
+                  smallDetails('Location :   ', widget.concernDetails.location),
+                  Container(
+                    alignment: Alignment.topLeft,
+                    child: Text(widget.concernDetails.description,
+                        style: const TextStyle(
+                            fontSize: 13,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w500)),
                   ),
                   const SizedBox(height: 35),
                   Row(

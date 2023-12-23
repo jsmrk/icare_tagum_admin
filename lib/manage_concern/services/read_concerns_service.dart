@@ -13,6 +13,7 @@ Stream<List<ConcernDetails>> readConcernDetails() {
             final dateTime = timestamp.toDate();
 
             final details = ConcernDetails(
+                nickname: data['nickname'],
                 location: data['location'],
                 title: data['title'],
                 dateTime: dateTime,

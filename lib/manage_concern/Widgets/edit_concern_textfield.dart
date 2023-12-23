@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class EditConcernTextfield extends StatelessWidget {
   var controller = TextEditingController();
-  Text label;
+  String label;
 
   EditConcernTextfield(
       {required this.label, required this.controller, super.key});
@@ -10,10 +10,11 @@ class EditConcernTextfield extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      readOnly: true,
       controller: controller,
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.all(15),
-        label: label,
+        hintText: label,
         labelStyle: const TextStyle(
             fontFamily: 'Inter',
             color: Color.fromARGB(255, 76, 76, 76),

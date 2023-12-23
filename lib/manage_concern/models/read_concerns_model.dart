@@ -6,9 +6,11 @@ class ConcernDetails {
   final String description;
   final String location;
   final String title;
+  final String nickname;
   final List<dynamic>? imageURLs;
 
   ConcernDetails({
+    required this.nickname,
     required this.location,
     required this.title,
     required this.dateTime,
