@@ -12,6 +12,7 @@ Stream<List<UpdateDetails>> readUpdateDetails() {
 
             final details = UpdateDetails(
                 title: data['title'],
+                authorName: data['author'],
                 description: data['description'],
                 imageURLs: data['imageURL'],
                 dateTime: dateTime);

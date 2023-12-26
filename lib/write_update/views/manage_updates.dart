@@ -164,7 +164,7 @@ class ManageUpdates extends StatelessWidget {
                                           );
                                         },
                                         icon: const Icon(
-                                          Icons.grid_view_outlined,
+                                          Icons.zoom_out_map_outlined,
                                           color: Colors.green,
                                         ),
                                       ),

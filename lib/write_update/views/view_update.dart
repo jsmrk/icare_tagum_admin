@@ -174,6 +174,29 @@ class _ViewUpdateState extends State<ViewUpdate> {
                     ),
                     Row(
                       children: [
+                        Container(
+                          alignment: Alignment.topLeft,
+                          child: const Text('Author :   ',
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontFamily: 'Inter',
+                              )),
+                        ),
+                        Container(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            widget.updateDetails.authorName,
+                            style: const TextStyle(
+                              fontSize: 15,
+                              fontFamily: 'Inter',
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 3),
+                    Row(
+                      children: [
                         SmallDetailsText(
                           title: '',
                           details: getFormattedDate(widget.updateDetails),
