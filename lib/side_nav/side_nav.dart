@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:icare_tagum_admin/side_nav/nav_controller.dart';
+import 'package:icare_tagum_admin/side_nav/services/nav_controller.dart';
 import 'package:icare_tagum_admin/side_nav/widgets/nav_listtile.dart';
 
 import 'services/user_detail.dart';

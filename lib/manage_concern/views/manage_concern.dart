@@ -6,8 +6,6 @@ import 'package:icare_tagum_admin/manage_concern/services/read_concerns_service.
 import 'package:icare_tagum_admin/manage_concern/views/edit_concern.dart';
 import 'package:icare_tagum_admin/manage_users/model/add_user_model.dart';
 
-import '../models/read_user.dart';
-
 class ManageConcern extends StatefulWidget {
   const ManageConcern({super.key});
 
@@ -105,31 +103,18 @@ class _ManageConcernState extends State<ManageConcern> {
                               DataCell(Text(concernDetails.department)),
                               DataCell(Text(
                                   concernDetails.dateTime.toIso8601String())),
-                              DataCell(Row(
-                                children: [
-                                  IconButton(
-                                    onPressed: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) =>
-                                            EditConcern(concernDetails),
-                                      );
-                                    },
-                                    icon: const Icon(
-                                      Icons.edit_outlined,
-                                      color: Colors.green,
-                                    ),
-                                  ),
-                                  IconButton(
-                                    onPressed: () {
-                                      /* Delete button function */
-                                    },
-                                    icon: const Icon(
-                                      Icons.delete_outline_outlined,
-                                      color: Color.fromARGB(255, 250, 119, 110),
-                                    ),
-                                  ),
-                                ],
+                              DataCell(IconButton(
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) =>
+                                        EditConcern(concernDetails),
+                                  );
+                                },
+                                icon: const Icon(
+                                  Icons.edit_outlined,
+                                  color: Colors.green,
+                                ),
                               )),
                             ],
                           ),

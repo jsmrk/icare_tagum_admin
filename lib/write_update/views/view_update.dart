@@ -5,37 +5,32 @@ import 'package:flutter/material.dart';
 
 import 'package:icare_tagum_admin/manage_concern/Widgets/edit_concern_btn.dart';
 import 'package:icare_tagum_admin/manage_concern/Widgets/edit_concern_smalldetails.dart';
-import 'package:icare_tagum_admin/manage_concern/Widgets/edit_dropdown.dart';
-import 'package:icare_tagum_admin/manage_concern/models/read_concerns_model.dart';
+import 'package:icare_tagum_admin/write_update/models/read_updates_model.dart';
 import 'package:intl/intl.dart';
 
-import '../models/edit_concern_model.dart';
-import '../services/save_updated_concern.dart';
-
-class EditConcern extends StatefulWidget {
-  final ConcernDetails concernDetails;
-  const EditConcern(this.concernDetails, {super.key});
+class ViewUpdate extends StatefulWidget {
+  final UpdateDetails updateDetails;
+  const ViewUpdate(this.updateDetails, {super.key});
 
   @override
-  State<EditConcern> createState() => _EditConcernState();
+  State<ViewUpdate> createState() => _ViewUpdateState();
 }
 
-class _EditConcernState extends State<EditConcern> {
-  String? _selectedDepartment;
+class _ViewUpdateState extends State<ViewUpdate> {
   final PageController _pageController = PageController();
   int _currentImageIndex = 0;
 
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
 
-  String getFormattedDate(ConcernDetails concernDetails) {
-    final dateTime = concernDetails.dateTime;
+  String getFormattedDate(UpdateDetails updateDetails) {
+    final dateTime = updateDetails.dateTime;
     final formatter = DateFormat('yyyy-MM-dd'); // Customize format as needed
     return formatter.format(dateTime);
   }
 
-  String getFormattedTime(ConcernDetails concernDetails) {
-    final dateTime = concernDetails.dateTime;
+  String getFormattedTime(UpdateDetails updateDetails) {
+    final dateTime = updateDetails.dateTime;
     final formatter = DateFormat('h:mm a'); // Customize format as needed
     return formatter.format(dateTime);
   }
@@ -48,7 +43,7 @@ class _EditConcernState extends State<EditConcern> {
         children: [
           PageView.builder(
             controller: _pageController,
-            itemCount: widget.concernDetails.imageURLs!.length,
+            itemCount: widget.updateDetails.imageURLs!.length,
             onPageChanged: (index) {
               setState(() {
                 _currentImageIndex = index;
@@ -68,7 +63,7 @@ class _EditConcernState extends State<EditConcern> {
                     child: ClipRRect(
                       borderRadius: const BorderRadius.all(Radius.circular(25)),
                       child: Image.network(
-                        widget.concernDetails.imageURLs![index],
+                        widget.updateDetails.imageURLs![index],
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -77,7 +72,7 @@ class _EditConcernState extends State<EditConcern> {
               );
             },
           ),
-          if (widget.concernDetails.imageURLs!.length > 1)
+          if (widget.updateDetails.imageURLs!.length > 1)
             Positioned(
               left: 7,
               top: 151,
@@ -96,7 +91,7 @@ class _EditConcernState extends State<EditConcern> {
                 },
               ),
             ),
-          if (widget.concernDetails.imageURLs!.length > 1)
+          if (widget.updateDetails.imageURLs!.length > 1)
             Positioned(
               right: 7,
               top: 151,
@@ -107,7 +102,7 @@ class _EditConcernState extends State<EditConcern> {
                 icon: const Icon(Icons.arrow_right),
                 onPressed: () {
                   if (_currentImageIndex <
-                      widget.concernDetails.imageURLs!.length - 1) {
+                      widget.updateDetails.imageURLs!.length - 1) {
                     _pageController.nextPage(
                       duration: const Duration(milliseconds: 300),
                       curve: Curves.ease,
@@ -157,7 +152,7 @@ class _EditConcernState extends State<EditConcern> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    widget.concernDetails.imageURLs!.isNotEmpty
+                    widget.updateDetails.imageURLs!.isNotEmpty
                         ? displayImages()
                         : ClipRRect(
                             borderRadius: BorderRadius.circular(25),
@@ -168,97 +163,25 @@ class _EditConcernState extends State<EditConcern> {
                               fit: BoxFit.cover,
                             ),
                           ),
-                    const SizedBox(height: 7),
+                    const SizedBox(height: 25),
                     Container(
                       alignment: Alignment.topLeft,
-                      child: Text(widget.concernDetails.title,
+                      child: Text(widget.updateDetails.title,
                           style: const TextStyle(
                               fontSize: 27,
                               fontFamily: 'Inter',
                               fontWeight: FontWeight.w700)),
                     ),
-                    const SizedBox(height: 7),
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SmallDetailsText(
-                            title: 'Author :   ',
-                            details: widget.concernDetails.nickname,
-                          ),
-                          SmallDetailsText(
-                            title: '',
-                            details: getFormattedDate(widget.concernDetails),
-                          ),
-                        ]),
-                    const SizedBox(height: 3),
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SmallDetailsText(
-                              title: 'Urgency :   ',
-                              details: widget.concernDetails.urgency),
-                          SmallDetailsText(
-                              title: '',
-                              details: getFormattedTime(widget.concernDetails)),
-                        ]),
-                    const SizedBox(height: 3),
-                    SmallDetailsText(
-                      title: 'Location :   ',
-                      details: widget.concernDetails.location,
-                    ),
-                    SmallDetailsText(
-                      title: 'Status :   ',
-                      details: widget.concernDetails.status,
-                    ),
-                    const SizedBox(height: 3),
                     Row(
                       children: [
-                        const Text(
-                          'Department :  ',
-                          style: TextStyle(
-                            fontFamily: 'Inter',
-                            color: Colors.black,
-                            fontSize: 15,
-                          ),
+                        SmallDetailsText(
+                          title: '',
+                          details: getFormattedDate(widget.updateDetails),
                         ),
-                        EditConcernDropdown(
-                          width: 255,
-                          child: DropdownButton<String>(
-                            iconEnabledColor: Colors.white,
-                            padding: const EdgeInsets.only(top: 0, bottom: 0),
-                            hint: Text(
-                              widget.concernDetails.department,
-                              style: const TextStyle(
-                                  color: Colors.white,
-                                  overflow: TextOverflow.ellipsis),
-                            ),
-                            isExpanded: true,
-                            dropdownColor: Colors.green,
-                            style: const TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 15,
-                                overflow: TextOverflow.ellipsis,
-                                color: Colors.white),
-                            underline: const SizedBox.square(),
-                            value: _selectedDepartment,
-                            items: departments.map((item) {
-                              return DropdownMenuItem<String>(
-                                value: item,
-                                child: Text(
-                                  item,
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      overflow: TextOverflow.ellipsis),
-                                ),
-                              );
-                            }).toList(),
-                            onChanged: (item) {
-                              setState(() {
-                                _selectedDepartment = item!;
-                              });
-                            },
-                          ),
-                        )
+                        const SizedBox(width: 15),
+                        SmallDetailsText(
+                            title: '',
+                            details: getFormattedTime(widget.updateDetails)),
                       ],
                     ),
                     const SizedBox(height: 15),
@@ -268,9 +191,9 @@ class _EditConcernState extends State<EditConcern> {
                       child: SingleChildScrollView(
                         physics: const BouncingScrollPhysics(),
                         child: Text(
-                          widget.concernDetails.description,
+                          widget.updateDetails.description,
                           style: const TextStyle(
-                            fontSize: 15,
+                            fontSize: 17,
                             fontFamily: 'Inter',
                             fontWeight: FontWeight.w500,
                           ),
@@ -282,34 +205,21 @@ class _EditConcernState extends State<EditConcern> {
                 ),
                 Positioned(
                   bottom: 13,
-                  right: 0,
+                  left: 215,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       EditConcernButton(
-                        buttonName: 'Cancel',
+                        buttonName: 'Close',
                         onTap: () {
                           Navigator.pop(context);
                         },
                         tColor: Colors.white,
-                        bColor: Colors.grey,
+                        bColor: Colors.green,
                         icon: Icons.close,
                       ),
                       const SizedBox(width: 35),
-                      EditConcernButton(
-                        buttonName: 'Save',
-                        onTap: () async {
-                          await saveUpdatedConcern(
-                            context,
-                            _selectedDepartment,
-                            widget.concernDetails.dateTime,
-                          );
-                        },
-                        tColor: Colors.white,
-                        bColor: Colors.green,
-                        icon: Icons.add,
-                      ),
                     ],
                   ),
                 ),
