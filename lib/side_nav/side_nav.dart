@@ -82,7 +82,11 @@ class _SideNavState extends State<SideNav> {
                             ),
                             NavListTile(
                               title: 'Manage Users',
-                              onTap: () => navController.index.value = 2,
+                              onTap: () {
+                                if (userRole == 'Administrator') {
+                                  navController.index.value = 2;
+                                }
+                              },
                               selected: navController.index.value == 2,
                               icon: Icons.manage_accounts,
                             ),

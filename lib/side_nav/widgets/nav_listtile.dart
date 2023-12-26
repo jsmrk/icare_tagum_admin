@@ -5,6 +5,7 @@ class NavListTile extends StatelessWidget {
   VoidCallback onTap;
   IconData icon;
   String title;
+
   NavListTile({
     required this.title,
     required this.icon,
