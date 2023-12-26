@@ -156,15 +156,15 @@ class _ManageUsersState extends State<ManageUsers> {
                                     userDetail.dateTime.toIso8601String())),
                                 DataCell(Row(
                                   children: [
-                                    IconButton(
-                                      onPressed: () {
-                                        /* Edit button function */
-                                      },
-                                      icon: const Icon(
-                                        Icons.edit_outlined,
-                                        color: Colors.green,
-                                      ),
-                                    ),
+                                    // IconButton(
+                                    //   onPressed: () {
+                                    //     /* Edit button function */
+                                    //   },
+                                    //   icon: const Icon(
+                                    //     Icons.edit_outlined,
+                                    //     color: Colors.green,
+                                    //   ),
+                                    // ),
                                     IconButton(
                                       onPressed: () {
                                         deleteUser(

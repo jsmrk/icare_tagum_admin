@@ -56,12 +56,38 @@ Future<void> deleteUpdate(BuildContext context, DateTime dateTime) async {
   }
 }
 
+Widget _buildProgressIndicator() {
+  return const Center(
+    child: CircularProgressIndicator(
+      valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+    ),
+  );
+}
+
 void showSuccessDialog(BuildContext context) {
   showDialog(
     context: context,
     builder: (context) => AlertDialog(
       title: const Text('Update Deleted'),
       content: const Text('You have successfully deleted this Update'),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: const Text('OK'),
+        ),
+      ],
+    ),
+  );
+}
+
+void _showErrorDialog(BuildContext context, String errorMessage) {
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('Error'),
+      content: Text(errorMessage),
       actions: [
         TextButton(
           onPressed: () {

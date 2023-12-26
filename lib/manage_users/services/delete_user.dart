@@ -64,12 +64,12 @@ Widget _buildProgressIndicator() {
   );
 }
 
-void _showErrorDialog(BuildContext context, String errorMessage) {
+void showSuccessDialog(BuildContext context) {
   showDialog(
     context: context,
     builder: (context) => AlertDialog(
-      title: const Text('Error'),
-      content: Text(errorMessage),
+      title: const Text('Update Deleted'),
+      content: const Text('You have successfully deleted this Update'),
       actions: [
         TextButton(
           onPressed: () {
@@ -82,12 +82,12 @@ void _showErrorDialog(BuildContext context, String errorMessage) {
   );
 }
 
-void showSuccessDialog(BuildContext context) {
+void _showErrorDialog(BuildContext context, String errorMessage) {
   showDialog(
     context: context,
     builder: (context) => AlertDialog(
-      title: const Text('Update Deleted'),
-      content: const Text('You have successfully deleted this Update'),
+      title: const Text('Error'),
+      content: Text(errorMessage),
       actions: [
         TextButton(
           onPressed: () {
