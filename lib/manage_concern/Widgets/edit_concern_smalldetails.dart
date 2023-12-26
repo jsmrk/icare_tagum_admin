@@ -1,4 +1,5 @@
-import 'package:flutter/foundation.dart';
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 
 class SmallDetailsText extends StatelessWidget {
@@ -25,15 +26,14 @@ class SmallDetailsText extends StatelessWidget {
             TextSpan(
               text: details,
               style: const TextStyle(
-                fontFamily: 'Inter',
-                color: Colors.black,
-                fontSize: 15,
-              ),
+                  fontFamily: 'Inter',
+                  color: Colors.black,
+                  fontSize: 15,
+                  overflow: TextOverflow.ellipsis),
             ),
           ],
         ),
       ),
     );
-    ;
   }
 }

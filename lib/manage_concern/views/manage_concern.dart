@@ -1,12 +1,21 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:icare_tagum_admin/manage_concern/Widgets/edit_btn_icon.dart';
 import 'package:icare_tagum_admin/manage_concern/models/read_concerns_model.dart';
 import 'package:icare_tagum_admin/manage_concern/services/read_concerns_service.dart';
 import 'package:icare_tagum_admin/manage_concern/views/edit_concern.dart';
+import 'package:icare_tagum_admin/manage_users/model/add_user_model.dart';
 
-class ManageConcern extends StatelessWidget {
+import '../models/read_user.dart';
+
+class ManageConcern extends StatefulWidget {
   const ManageConcern({super.key});
 
+  @override
+  State<ManageConcern> createState() => _ManageConcernState();
+}
+
+class _ManageConcernState extends State<ManageConcern> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +48,7 @@ class ManageConcern extends StatelessWidget {
               ),
             ),
             StreamBuilder<List<ConcernDetails>>(
-              stream: readConcernDetails(),
+              stream: readConcerns(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   final concernDetails = snapshot.data!;
@@ -87,58 +96,55 @@ class ManageConcern extends StatelessWidget {
                       ),
                     ],
                     rows: concernDetails
-                        .map((concernDetails) => DataRow(
-                              cells: [
-                                DataCell(Text(concernDetails.title)),
-                                DataCell(Text(concernDetails.urgency)),
-                                DataCell(Text(concernDetails.status)),
-                                DataCell(Text(concernDetails.department)),
-                                DataCell(Text(
-                                    concernDetails.dateTime.toIso8601String())),
-                                DataCell(Row(
-                                  children: [
-                                    IconButton(
-                                      onPressed: () {
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) =>
-                                              EditConcern(concernDetails),
-                                        );
-                                      },
-                                      icon: const Icon(
-                                        Icons.edit_outlined,
-                                        color: Colors.green,
-                                      ),
+                        .map(
+                          (concernDetails) => DataRow(
+                            cells: [
+                              DataCell(Text(concernDetails.title)),
+                              DataCell(Text(concernDetails.urgency)),
+                              DataCell(Text(concernDetails.status)),
+                              DataCell(Text(concernDetails.department)),
+                              DataCell(Text(
+                                  concernDetails.dateTime.toIso8601String())),
+                              DataCell(Row(
+                                children: [
+                                  IconButton(
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) =>
+                                            EditConcern(concernDetails),
+                                      );
+                                    },
+                                    icon: const Icon(
+                                      Icons.edit_outlined,
+                                      color: Colors.green,
                                     ),
-                                    IconButton(
-                                      onPressed: () {
-                                        /* Delete button function */
-                                      },
-                                      icon: const Icon(
-                                        Icons.delete_outline_outlined,
-                                        color:
-                                            Color.fromARGB(255, 250, 119, 110),
-                                      ),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      /* Delete button function */
+                                    },
+                                    icon: const Icon(
+                                      Icons.delete_outline_outlined,
+                                      color: Color.fromARGB(255, 250, 119, 110),
                                     ),
-                                  ],
-                                )),
-                              ],
-                            ))
+                                  ),
+                                ],
+                              )),
+                            ],
+                          ),
+                        )
                         .toList(),
                   );
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 }
-                return const Stack(
-                  children: [
-                    Visibility(
-                        child: Center(
-                      child: CircularProgressIndicator(
-                        color: Colors.green,
-                      ),
-                    ))
-                  ],
-                );
+
+                // Display a loading indicator while the stream is loading
+                return const Center(
+                    child: CircularProgressIndicator(
+                  color: Colors.green,
+                ));
               },
             ),
           ],

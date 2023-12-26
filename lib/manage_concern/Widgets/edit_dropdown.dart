@@ -1,4 +1,5 @@
-import 'package:flutter/foundation.dart';
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 
 class EditConcernDropdown extends StatelessWidget {
@@ -11,7 +12,7 @@ class EditConcernDropdown extends StatelessWidget {
     return Container(
         height: 31,
         width: width,
-        padding: const EdgeInsets.only(left: 15, right: 3, top: 0),
+        padding: const EdgeInsets.only(left: 9, right: 3, top: 0),
         decoration: BoxDecoration(
           color: Colors.green,
           shape: BoxShape.rectangle,

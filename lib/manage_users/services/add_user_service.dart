@@ -70,7 +70,7 @@ Future addUserDetails(
 Widget _buildProgressIndicator() {
   return const Center(
     child: CircularProgressIndicator(
-      valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+      valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
     ),
   );
 }

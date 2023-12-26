@@ -1,19 +1,18 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:ui';
 
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
+
 import 'package:icare_tagum_admin/manage_concern/Widgets/edit_concern_btn.dart';
 import 'package:icare_tagum_admin/manage_concern/Widgets/edit_concern_smalldetails.dart';
 import 'package:icare_tagum_admin/manage_concern/Widgets/edit_dropdown.dart';
 import 'package:icare_tagum_admin/manage_concern/models/read_concerns_model.dart';
 import 'package:intl/intl.dart';
 
-import '../../manage_users/model/add_user_model.dart';
-import '../Widgets/edit_concern_textfield.dart';
 import '../models/edit_concern_model.dart';
+import '../services/save_updated_concern.dart';
 
 class EditConcern extends StatefulWidget {
   final ConcernDetails concernDetails;
@@ -24,9 +23,8 @@ class EditConcern extends StatefulWidget {
 }
 
 class _EditConcernState extends State<EditConcern> {
-  String? _status;
   String? _selectedDepartment;
-  PageController _pageController = PageController();
+  final PageController _pageController = PageController();
   int _currentImageIndex = 0;
 
   final titleController = TextEditingController();
@@ -210,56 +208,15 @@ class _EditConcernState extends State<EditConcern> {
                       title: 'Location :   ',
                       details: widget.concernDetails.location,
                     ),
-                    Row(
-                      children: [
-                        const Text(
-                          'Status : ',
-                          style: TextStyle(
-                            fontFamily: 'Inter',
-                            color: Colors.black,
-                            fontSize: 15,
-                          ),
-                        ),
-                        EditConcernDropdown(
-                          width: 255,
-                          child: DropdownButton<String>(
-                            iconEnabledColor: Colors.white,
-                            padding: const EdgeInsets.only(top: 0, bottom: 0),
-                            hint: Text(
-                              widget.concernDetails.status,
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                            isExpanded: true,
-                            dropdownColor: Colors.green,
-                            style: const TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 15,
-                                color: Colors.white),
-                            underline: const SizedBox.square(),
-                            value: _status,
-                            items: status.map((item) {
-                              return DropdownMenuItem<String>(
-                                value: item,
-                                child: Text(
-                                  item,
-                                  style: const TextStyle(color: Colors.white),
-                                ),
-                              );
-                            }).toList(),
-                            onChanged: (item) {
-                              setState(() {
-                                _status = item!;
-                              });
-                            },
-                          ),
-                        )
-                      ],
+                    SmallDetailsText(
+                      title: 'Status :   ',
+                      details: widget.concernDetails.status,
                     ),
-                    const SizedBox(height: 7),
+                    const SizedBox(height: 3),
                     Row(
                       children: [
                         const Text(
-                          'Department : ',
+                          'Department :  ',
                           style: TextStyle(
                             fontFamily: 'Inter',
                             color: Colors.black,
@@ -273,13 +230,16 @@ class _EditConcernState extends State<EditConcern> {
                             padding: const EdgeInsets.only(top: 0, bottom: 0),
                             hint: Text(
                               widget.concernDetails.department,
-                              style: const TextStyle(color: Colors.white),
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  overflow: TextOverflow.ellipsis),
                             ),
                             isExpanded: true,
                             dropdownColor: Colors.green,
                             style: const TextStyle(
                                 fontFamily: 'Inter',
                                 fontSize: 15,
+                                overflow: TextOverflow.ellipsis,
                                 color: Colors.white),
                             underline: const SizedBox.square(),
                             value: _selectedDepartment,
@@ -304,7 +264,7 @@ class _EditConcernState extends State<EditConcern> {
                       ],
                     ),
                     const SizedBox(height: 15),
-                    Container(
+                    SizedBox(
                       height: 189,
                       width: double.infinity,
                       child: SingleChildScrollView(
@@ -341,7 +301,13 @@ class _EditConcernState extends State<EditConcern> {
                       const SizedBox(width: 35),
                       EditConcernButton(
                         buttonName: 'Save',
-                        onTap: null,
+                        onTap: () async {
+                          await saveUpdatedConcern(
+                            context,
+                            _selectedDepartment,
+                            widget.concernDetails.dateTime,
+                          );
+                        },
                         tColor: Colors.white,
                         bColor: Colors.green,
                         icon: Icons.add,
