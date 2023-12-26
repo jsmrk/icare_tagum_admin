@@ -22,7 +22,7 @@ class EditConcernButton extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(25),
         child: Container(
-          height: 37,
+          height: 31,
           width: 135,
           alignment: Alignment.center,
           color: bColor,

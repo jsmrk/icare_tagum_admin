@@ -4,11 +4,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:icare_tagum_admin/manage_concern/Widgets/edit_concern_btn.dart';
+import 'package:icare_tagum_admin/manage_concern/Widgets/edit_concern_smalldetails.dart';
+import 'package:icare_tagum_admin/manage_concern/Widgets/edit_dropdown.dart';
 import 'package:icare_tagum_admin/manage_concern/models/read_concerns_model.dart';
 import 'package:intl/intl.dart';
 
+import '../../manage_users/model/add_user_model.dart';
 import '../Widgets/edit_concern_textfield.dart';
+import '../models/edit_concern_model.dart';
 
 class EditConcern extends StatefulWidget {
   final ConcernDetails concernDetails;
@@ -19,6 +24,8 @@ class EditConcern extends StatefulWidget {
 }
 
 class _EditConcernState extends State<EditConcern> {
+  String? _status;
+  String? _selectedDepartment;
   PageController _pageController = PageController();
   int _currentImageIndex = 0;
 
@@ -37,39 +44,10 @@ class _EditConcernState extends State<EditConcern> {
     return formatter.format(dateTime);
   }
 
-  Widget smallDetails(String title, String details) {
-    return Container(
-      alignment: Alignment.topLeft,
-      padding: const EdgeInsets.only(left: 1.9, bottom: 5),
-      child: RichText(
-        text: TextSpan(
-          children: [
-            TextSpan(
-              text: title,
-              style: const TextStyle(
-                fontFamily: 'Inter',
-                color: Colors.black,
-                fontSize: 17,
-              ),
-            ),
-            TextSpan(
-              text: details,
-              style: const TextStyle(
-                fontFamily: 'Inter',
-                color: Colors.black,
-                fontSize: 17,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget displayImages() {
-    return Container(
-      height: 355,
-      width: 635,
+    return SizedBox(
+      height: 299,
+      width: double.infinity,
       child: Stack(
         children: [
           PageView.builder(
@@ -86,13 +64,17 @@ class _EditConcernState extends State<EditConcern> {
                   const Center(
                     child: CircularProgressIndicator(
                       color: Colors.green,
-                    ), // Display loading indicator initially
+                    ),
                   ),
-                  ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(25)),
-                    child: Image.network(
-                      widget.concernDetails.imageURLs![index],
-                      fit: BoxFit.cover,
+                  SizedBox(
+                    height: 299,
+                    width: 735,
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.all(Radius.circular(25)),
+                      child: Image.network(
+                        widget.concernDetails.imageURLs![index],
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ],
@@ -170,7 +152,7 @@ class _EditConcernState extends State<EditConcern> {
           ),
           Container(
               padding: const EdgeInsets.only(
-                  left: 39, right: 39, top: 17, bottom: 17),
+                  left: 39, right: 39, top: 32, bottom: 17),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(25),
@@ -179,7 +161,6 @@ class _EditConcernState extends State<EditConcern> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 15),
                     widget.concernDetails.imageURLs!.isNotEmpty
                         ? displayImages()
                         : ClipRRect(
@@ -191,47 +172,150 @@ class _EditConcernState extends State<EditConcern> {
                               fit: BoxFit.cover,
                             ),
                           ),
+                    const SizedBox(height: 7),
                     Container(
                       alignment: Alignment.topLeft,
                       child: Text(widget.concernDetails.title,
                           style: const TextStyle(
-                              fontSize: 31,
+                              fontSize: 27,
                               fontFamily: 'Inter',
                               fontWeight: FontWeight.w700)),
                     ),
-                    const SizedBox(height: 15),
+                    const SizedBox(height: 7),
                     Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          smallDetails(
-                              'Author :   ', widget.concernDetails.nickname),
-                          smallDetails(
-                              '', getFormattedDate(widget.concernDetails)),
+                          SmallDetailsText(
+                            title: 'Author :   ',
+                            details: widget.concernDetails.nickname,
+                          ),
+                          SmallDetailsText(
+                            title: '',
+                            details: getFormattedDate(widget.concernDetails),
+                          ),
                         ]),
                     const SizedBox(height: 3),
                     Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          smallDetails(
-                              'Urgency :   ', widget.concernDetails.urgency),
-                          smallDetails(
-                              '', getFormattedTime(widget.concernDetails)),
+                          SmallDetailsText(
+                              title: 'Urgency :   ',
+                              details: widget.concernDetails.urgency),
+                          SmallDetailsText(
+                              title: '',
+                              details: getFormattedTime(widget.concernDetails)),
                         ]),
                     const SizedBox(height: 3),
-                    smallDetails(
-                        'Location :   ', widget.concernDetails.location),
+                    SmallDetailsText(
+                      title: 'Location :   ',
+                      details: widget.concernDetails.location,
+                    ),
+                    Row(
+                      children: [
+                        const Text(
+                          'Status : ',
+                          style: TextStyle(
+                            fontFamily: 'Inter',
+                            color: Colors.black,
+                            fontSize: 15,
+                          ),
+                        ),
+                        EditConcernDropdown(
+                          width: 255,
+                          child: DropdownButton<String>(
+                            iconEnabledColor: Colors.white,
+                            padding: const EdgeInsets.only(top: 0, bottom: 0),
+                            hint: Text(
+                              widget.concernDetails.status,
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                            isExpanded: true,
+                            dropdownColor: Colors.green,
+                            style: const TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 15,
+                                color: Colors.white),
+                            underline: const SizedBox.square(),
+                            value: _status,
+                            items: status.map((item) {
+                              return DropdownMenuItem<String>(
+                                value: item,
+                                child: Text(
+                                  item,
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (item) {
+                              setState(() {
+                                _status = item!;
+                              });
+                            },
+                          ),
+                        )
+                      ],
+                    ),
+                    const SizedBox(height: 7),
+                    Row(
+                      children: [
+                        const Text(
+                          'Department : ',
+                          style: TextStyle(
+                            fontFamily: 'Inter',
+                            color: Colors.black,
+                            fontSize: 15,
+                          ),
+                        ),
+                        EditConcernDropdown(
+                          width: 255,
+                          child: DropdownButton<String>(
+                            iconEnabledColor: Colors.white,
+                            padding: const EdgeInsets.only(top: 0, bottom: 0),
+                            hint: Text(
+                              widget.concernDetails.department,
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                            isExpanded: true,
+                            dropdownColor: Colors.green,
+                            style: const TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 15,
+                                color: Colors.white),
+                            underline: const SizedBox.square(),
+                            value: _selectedDepartment,
+                            items: departments.map((item) {
+                              return DropdownMenuItem<String>(
+                                value: item,
+                                child: Text(
+                                  item,
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      overflow: TextOverflow.ellipsis),
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (item) {
+                              setState(() {
+                                _selectedDepartment = item!;
+                              });
+                            },
+                          ),
+                        )
+                      ],
+                    ),
                     const SizedBox(height: 15),
-                    SingleChildScrollView(
-                      physics: const BouncingScrollPhysics(),
-                      child: Text(
-                        widget.concernDetails.description,
-                        maxLines: 7,
-                        softWrap: true,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontSize: 17,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w500,
+                    Container(
+                      height: 189,
+                      width: double.infinity,
+                      child: SingleChildScrollView(
+                        physics: const BouncingScrollPhysics(),
+                        child: Text(
+                          widget.concernDetails.description,
+                          style: const TextStyle(
+                            fontSize: 15,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
                     ),
@@ -239,7 +323,7 @@ class _EditConcernState extends State<EditConcern> {
                   ],
                 ),
                 Positioned(
-                  bottom: 17,
+                  bottom: 7,
                   right: 0,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
