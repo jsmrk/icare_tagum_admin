@@ -3,7 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-Future<void> deleteUpdate(BuildContext context, DateTime dateTime) async {
+Future<void> deleteUser(BuildContext context, DateTime dateTime) async {
   // Prompt for confirmation
   bool confirmDeletion = await showDialog(
     context: context,
@@ -35,7 +35,7 @@ Future<void> deleteUpdate(BuildContext context, DateTime dateTime) async {
 
       // Perform deletion
       await FirebaseFirestore.instance
-          .collection('updates')
+          .collection('users')
           .where('datetime', isEqualTo: dateTime)
           .get()
           .then((querySnapshot) async {
@@ -54,6 +54,32 @@ Future<void> deleteUpdate(BuildContext context, DateTime dateTime) async {
       _showErrorDialog(context, error.toString()); // Display error message
     }
   }
+}
+
+Widget _buildProgressIndicator() {
+  return const Center(
+    child: CircularProgressIndicator(
+      valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+    ),
+  );
+}
+
+void _showErrorDialog(BuildContext context, String errorMessage) {
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('Error'),
+      content: Text(errorMessage),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: const Text('OK'),
+        ),
+      ],
+    ),
+  );
 }
 
 void showSuccessDialog(BuildContext context) {

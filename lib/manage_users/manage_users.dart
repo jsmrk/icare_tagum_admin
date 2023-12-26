@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:icare_tagum_admin/manage_users/add_user.dart';
 import 'package:icare_tagum_admin/manage_users/model/read_user_model.dart';
+import 'package:icare_tagum_admin/manage_users/services/delete_user.dart';
 import 'package:icare_tagum_admin/manage_users/services/read_user_service.dart';
 
 class ManageUsers extends StatefulWidget {
@@ -11,7 +12,7 @@ class ManageUsers extends StatefulWidget {
 }
 
 class _ManageUsersState extends State<ManageUsers> {
-  int index = 1;
+  // int index = 1;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -117,9 +118,9 @@ class _ManageUsersState extends State<ManageUsers> {
                       fontSize: 13,
                     ),
                     columns: const [
-                      DataColumn(
-                        label: Text('#'),
-                      ),
+                      // DataColumn(
+                      //   label: Text('#'),
+                      // ),
                       DataColumn(
                         label: Text('Role'),
                       ),
@@ -145,7 +146,7 @@ class _ManageUsersState extends State<ManageUsers> {
                     rows: userDetail
                         .map((userDetail) => DataRow(
                               cells: [
-                                DataCell(Text('${index++}')),
+                                // DataCell(Text('${index++}')),
                                 DataCell(Text(userDetail.role)),
                                 DataCell(Text(userDetail.name)),
                                 DataCell(Text(userDetail.email)),
@@ -166,7 +167,8 @@ class _ManageUsersState extends State<ManageUsers> {
                                     ),
                                     IconButton(
                                       onPressed: () {
-                                        /* Delete button function */
+                                        deleteUser(
+                                            context, userDetail.dateTime);
                                       },
                                       icon: const Icon(
                                         Icons.delete_outline_outlined,
