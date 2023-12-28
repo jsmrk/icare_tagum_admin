@@ -42,7 +42,7 @@ class _EditConcernState extends State<EditConcern> {
 
   Widget displayImages() {
     return SizedBox(
-      height: 299,
+      height: 359,
       width: double.infinity,
       child: Stack(
         children: [
@@ -63,7 +63,7 @@ class _EditConcernState extends State<EditConcern> {
                     ),
                   ),
                   SizedBox(
-                    height: 299,
+                    height: 359,
                     width: 735,
                     child: ClipRRect(
                       borderRadius: const BorderRadius.all(Radius.circular(25)),
@@ -263,7 +263,7 @@ class _EditConcernState extends State<EditConcern> {
                     ),
                     const SizedBox(height: 15),
                     SizedBox(
-                      height: 189,
+                      height: 99,
                       width: double.infinity,
                       child: SingleChildScrollView(
                         physics: const BouncingScrollPhysics(),

@@ -125,7 +125,8 @@ class _SideNavState extends State<SideNav> {
                                     fontFamily: 'Inter',
                                     color: Colors.green,
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 13),
+                                    fontSize: 13,
+                                    overflow: TextOverflow.ellipsis),
                               ),
                               Text(
                                 userRole.toString(),
