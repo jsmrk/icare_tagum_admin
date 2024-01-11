@@ -1,8 +1,6 @@
 # iCare Tagum Admin
 
-The Admin side of the iCare Tagum MobileApp
-
-A Mobile app for reporting or submitting the citizens concerns to the Government Office of Tagum City. To improving communication and collaboration between citizens and the Tagum City government. By prioritizing citizen needs and incorporating thoughtful features, it can play a significant role in creating a more responsive and efficient governance system.
+The Admin side of the iCare Tagum Mobile App. This is where the Government of Tagum can check or view the concerns of the citizens. There are two users, the administrator and the moderator per department of the City. The admin can assign this concerns to the department which will resolve the said concern and the moderator can only view the concerns that are asign to their department. This is also where the updates are posted for the citizens to view in the mobile app. The Manage accounts tab is only accessible by administrators.
 
 Technologies use: ◽️Flutter ◽️Firebase
 
