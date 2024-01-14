@@ -8,8 +8,6 @@ Technologies use: ◽️Flutter ◽️Firebase
 
 ![image](https://github.com/jsmrk/icare_tagum_admin/assets/119231806/34feb8cc-32ba-463c-90e5-07f6e2f225e9)
 
-![image](https://github.com/jsmrk/icare_tagum_admin/assets/119231806/f345bf82-e629-4e12-85dc-d6bbb0e4da4b)
-
 ![image](https://github.com/jsmrk/icare_tagum_admin/assets/119231806/7f1e4b35-c311-4321-b107-92d0b239f982)
 
 ![image](https://github.com/jsmrk/icare_tagum_admin/assets/119231806/ba2c3db6-68cb-4be3-ae6f-8ea34915a932)
